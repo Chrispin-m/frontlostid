@@ -60,7 +60,7 @@ export default {
   methods: {
     async fetchMessages() {
       try {
-        const response = await axios.get(`https://lostid-4c72.vercel.app/api/ids/${this.id}/messages/`);
+        const response = await axios.get(`https://ichrispin.pythonanywhere.com/api/ids/${this.id}/messages/`);
         this.messages = response.data;
       } catch (error) {
         alert('Failed to load messages.');
@@ -71,7 +71,7 @@ export default {
       this.isSending = true;
       const deviceInfo = navigator.userAgent;
       try {
-        await axios.post(`https://lostid-4c72.vercel.app/api/ids/${this.id}/messages/post/`, {
+        await axios.post(`https://ichrispin.pythonanywhere.com/api/ids/${this.id}/messages/post/`, {
           sender_contact: this.senderContact,
           message_text: this.messageText,
           device_info: deviceInfo, // Add device information here
