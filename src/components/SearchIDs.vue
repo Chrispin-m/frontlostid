@@ -1,7 +1,6 @@
 <template>
   <section class="section">
     <div class="container">
-      <h1 class="title has-text-centered">Search for a Lost ID</h1>
       <div class="field">
         <div class="control">
           <input

@@ -2,8 +2,6 @@
   <div id="app">
     <!-- Navbar -->
     <Navbar />
-
-    <!-- Dynamic Content -->
     <main>
       <router-view />
     </main>
@@ -12,7 +10,7 @@
     <footer class="footer">
       <div class="content has-text-centered">
         <p>
-          <strong>Lost ID Recovery</strong> by <a href="#">JKUAT</a>. Helping students recover their lost IDs.
+          <strong>Lost ID Recovery</strong> by <a href="#">iChrispin</a>. Helping students (Inspired by the Community of <a href="https://www.jkuat.ac.ke/">JKUAT</a>) recover their lost IDs.
         </p>
       </div>
     </footer>

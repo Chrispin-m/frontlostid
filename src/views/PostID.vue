@@ -1,5 +1,5 @@
 <template>
-  <section class="section has-background-light">
+  <section class="section">
     <!-- Animated Container -->
     <motion-div
       initial="hidden"
@@ -59,7 +59,6 @@ export default {
   box-shadow: 0px 10px 20px rgba(0, 0, 0, 0.1);
 }
 
-/* Typography */
 .title {
   font-family: 'Poppins', sans-serif;
   font-weight: 700;
@@ -68,7 +67,6 @@ export default {
   font-family: 'Roboto', sans-serif;
 }
 
-/* Add subtle hover effect */
 .box:hover {
   transform: translateY(-3px);
   transition: transform 0.3s ease;

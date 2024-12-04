@@ -108,24 +108,32 @@ export default {
       formData.append("image", this.image);
 
       try {
-  const response = await axios.post("http://127.0.0.1:8000/api/ids/post/", formData);
-  
-  // Get the URL for the uploaded image from the response
-  const imageUrl = response.data.image_url;
-  this.successLink = response.data.message_link;
-  this.showModal = true;
+        const response = await axios.post("http://127.0.0.1:8000/api/ids/post/", formData);
 
-  // Use the URL to display the image (for example, in an <img> tag)
-  this.uploadedImageUrl = imageUrl;
+        // Get the URL for the uploaded image from the response
+        const imageUrl = response.data.image_url;
+        this.successLink = response.data.message_link;
+        this.showModal = true;
 
-  this.resetForm();
-} catch (error) {
-console.log(error);
-  alert("Failed to post ID. Please try again.");
-} finally {
-  this.isLoading = false;
-}
+        // Save the success link to local storage
+        this.saveLink(this.successLink);
 
+        // Use the URL to display the image (for example, in an <img> tag)
+        this.uploadedImageUrl = imageUrl;
+
+        this.resetForm();
+      } catch (error) {
+        console.error(error);
+        alert("Failed to post ID. Please try again.");
+      } finally {
+        this.isLoading = false;
+      }
+    },
+    // Saves the link to local storage
+    saveLink(link) {
+      let savedLinks = JSON.parse(localStorage.getItem("savedLinks")) || [];
+      savedLinks.push(link);
+      localStorage.setItem("savedLinks", JSON.stringify(savedLinks));
     },
     // Resets the form
     resetForm() {
