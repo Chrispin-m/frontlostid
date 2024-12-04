@@ -61,7 +61,7 @@ export default {
   methods: {
     async searchIDs() {
       try {
-        const response = await axios.get('https://lostid.onrender.com/api/ids/search/', {
+        const response = await axios.get('https://lostid-4c72.vercel.app/api/ids/search/', {
           params: { q: this.query },
         });
         this.results = response.data;
