@@ -61,7 +61,7 @@ export default {
   methods: {
     async searchIDs() {
       try {
-        const response = await axios.get('http://127.0.0.1:8000/api/ids/search/', {
+        const response = await axios.get('https://lostid.onrender.com/api/ids/search/', {
           params: { q: this.query },
         });
         this.results = response.data;
@@ -95,8 +95,8 @@ export default {
   padding: 1rem;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
   border-radius: 10px;
-  background-color: #000000; /* Set the background color to black */
-  color: white; /* Ensure text is visible on the black background */
+  background-color: #000000; 
+  color: white; 
 }
 
 .card img {

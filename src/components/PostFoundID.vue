@@ -108,7 +108,7 @@ export default {
       formData.append("image", this.image);
 
       try {
-        const response = await axios.post("http://127.0.0.1:8000/api/ids/post/", formData);
+        const response = await axios.post("https://lostid.onrender.com/api/ids/post/", formData);
 
         // Get the URL for the uploaded image from the response
         const imageUrl = response.data.image_url;

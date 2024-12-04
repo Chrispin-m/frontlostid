@@ -44,9 +44,6 @@ export default {
 </script>
 
 <style scoped>
-/* Enhanced Styling */
-
-/* Divider styling for visual separation */
 .divider {
   border: none;
   height: 2px;
