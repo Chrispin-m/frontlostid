@@ -108,7 +108,7 @@ export default {
       formData.append("image", this.image);
 
       try {
-        const response = await axios.post("https://ichrispin.pythonanywhere.com/api/ids/post/", formData);
+        const response = await axios.post("https://lostid-4c72.vercel.app/api/ids/post/", formData);
 
         // Get the URL for the uploaded image from the response
         const imageUrl = response.data.image_url;
