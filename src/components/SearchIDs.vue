@@ -1,6 +1,7 @@
 <template>
   <section class="section">
     <div class="container">
+      <!-- Search Field -->
       <div class="field">
         <div class="control">
           <input
@@ -12,21 +13,27 @@
           />
         </div>
       </div>
-      <button class="button is-info" @click="searchIDs">Search</button>
-      
+      <button class="button is-info is-fullwidth mb-4" @click="searchIDs">
+        Search
+      </button>
+
+      <!-- Search Results -->
       <div v-if="results.length" class="box">
-        <h2 class="subtitle">Search Results</h2>
+        <h2 class="subtitle has-text-centered">Search Results</h2>
         <div
           v-for="id in results"
           :key="id.id"
-          class="card my-3 animate__animated animate__fadeInUp"
+          class="card is-flex is-flex-direction-column is-align-items-center my-3 animate__animated animate__fadeInUp"
         >
+          <!-- Image -->
           <div class="card-image">
             <figure class="image is-128x128">
               <img :src="id.image_url" alt="Found ID Image" />
             </figure>
           </div>
-          <div class="card-content">
+
+          <!-- Card Content -->
+          <div class="card-content has-text-centered">
             <p class="is-size-5 has-text-weight-bold">Extracted Text:</p>
             <p class="content is-size-6 has-text-grey-dark">
               {{ truncateText(id.extracted_text) }}
@@ -46,57 +53,53 @@
 </template>
 
 <script>
-import axios from 'axios';
-import { useRouter } from 'vue-router';
-import { ref } from 'vue';
-import dayjs from 'dayjs';
+import axios from "axios";
+import dayjs from "dayjs";
 
 export default {
   data() {
     return {
-      query: '',
+      query: "",
       results: [],
     };
   },
   methods: {
     async searchIDs() {
       try {
-        const response = await axios.get('https://lostid.onrender.com/api/ids/search/', {
+        const response = await axios.get("https://lostid.onrender.com/api/ids/search/", {
           params: { q: this.query },
         });
         this.results = response.data;
       } catch (error) {
-        alert('Failed to search. Please try again.');
+        alert("Failed to search. Please try again.");
       }
     },
     goToMessages(id) {
       this.$router.push(`/messages/${id}`);
     },
-    // Truncate text if it's too long
     truncateText(text) {
-      if (text.length > 100) {
-        return text.slice(0, 100) + '...'; // Limit text length to 100 characters
-      }
-      return text;
+      return text.length > 100 ? text.slice(0, 100) + "..." : text;
     },
-    // Format posted date for readability
     formatDate(dateString) {
-      return dayjs(dateString).format('MMM D, YYYY [at] h:mm A');
+      return dayjs(dateString).format("MMM D, YYYY [at] h:mm A");
     },
   },
 };
 </script>
 
 <style scoped>
+/* General Styles */
 .card {
   display: flex;
+  flex-direction: column;
   align-items: center;
-  justify-content: space-between;
+  justify-content: center;
   padding: 1rem;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
   border-radius: 10px;
   background-color: #000000; 
-  color: white; 
+  color: white;
+  text-align: center;
 }
 
 .card img {
@@ -106,6 +109,7 @@ export default {
 
 .card-content {
   flex-grow: 1;
+  margin-top: 1rem;
 }
 
 .card-content p {
@@ -120,14 +124,48 @@ export default {
   transform: scale(1.1);
 }
 
-.animate__fadeInUp {
-  animation-duration: 0.5s;
-  animation-delay: 0s;
-  animation-timing-function: ease-out;
-}
-
 .content {
   max-width: 100%;
-  overflow-wrap: break-word;
+  word-wrap: break-word;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .card {
+    padding: 1rem;
+    margin: 0 auto;
+  }
+
+  .card-image figure {
+    width: 100px;
+    height: 100px;
+  }
+
+  .card-content {
+    margin-top: 0.5rem;
+  }
+
+  .button {
+    width: 100%;
+  }
+}
+
+@media (max-width: 480px) {
+  .card {
+    padding: 0.5rem;
+  }
+
+  .card-image figure {
+    width: 80px;
+    height: 80px;
+  }
+
+  .card-content p {
+    font-size: 14px;
+  }
+
+  .button {
+    font-size: 14px;
+  }
 }
 </style>
