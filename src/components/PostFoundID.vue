@@ -56,12 +56,7 @@
             <button class="delete" aria-label="close" @click="showModal = false"></button>
           </header>
           <section class="modal-card-body">
-            <p>Your ID has been posted successfully. Use the link below to manage messages:</p>
-            <div class="content has-text-centered mt-4">
-              <a :href="successLink" target="_blank" class="button is-link is-light">
-                View Messages
-              </a>
-            </div>
+            <p>Your ID and extracted text have been posted successfully.</p>
           </section>
         </div>
       </div>
@@ -71,16 +66,17 @@
 
 <script>
 import axios from "axios";
+import Tesseract from "tesseract.js";
 
 export default {
   data() {
     return {
-      image: null, // Stores the uploaded file
-      fileName: "", // Stores the name of the file
-      imagePreview: null, // Stores the preview URL
-      isLoading: false, // Tracks the loading state of the submit button
-      showModal: false, // Controls the visibility of the modal
-      successLink: "", // Stores the link to manage messages
+      image: null, 
+      fileName: "", 
+      imagePreview: null, 
+      extractedText: "", 
+      isLoading: false, 
+      showModal: false,
     };
   },
   methods: {
@@ -91,11 +87,29 @@ export default {
         this.image = file;
         this.fileName = file.name;
         this.imagePreview = URL.createObjectURL(file);
+
+        // Extract text from the image
+        this.extractTextFromImage(file);
       } else {
         this.resetForm();
       }
     },
-    // Submits the uploaded file
+    // Extracts text from the uploaded image
+    async extractTextFromImage(file) {
+      this.isLoading = true;
+      try {
+        const result = await Tesseract.recognize(file, "eng", {
+          logger: (info) => console.log(info),
+        });
+        this.extractedText = result.data.text.trim();
+      } catch (error) {
+        console.error("Error extracting text:", error);
+        alert("Failed to extract text. Please try again.");
+      } finally {
+        this.isLoading = false;
+      }
+    },
+    // Submits the uploaded file and extracted text
     async submitID() {
       if (!this.image) {
         alert("Please upload an image before submitting.");
@@ -106,21 +120,12 @@ export default {
 
       const formData = new FormData();
       formData.append("image", this.image);
+      formData.append("extracted_text", this.extractedText);
 
       try {
-        const response = await axios.post("https://lostid.onrender.com/api/ids/post/", formData);
+        await axios.post("https://lostid.onrender.com/api/ids/post/", formData);
 
-        // Get the URL for the uploaded image from the response
-        const imageUrl = response.data.image_url;
-        this.successLink = response.data.message_link;
         this.showModal = true;
-
-        // Save the success link to local storage
-        this.saveLink(this.successLink);
-
-        // Use the URL to display the image (for example, in an <img> tag)
-        this.uploadedImageUrl = imageUrl;
-
         this.resetForm();
       } catch (error) {
         console.error(error);
@@ -129,17 +134,12 @@ export default {
         this.isLoading = false;
       }
     },
-    // Saves the link to local storage
-    saveLink(link) {
-      let savedLinks = JSON.parse(localStorage.getItem("savedLinks")) || [];
-      savedLinks.push(link);
-      localStorage.setItem("savedLinks", JSON.stringify(savedLinks));
-    },
     // Resets the form
     resetForm() {
       this.image = null;
       this.fileName = "";
       this.imagePreview = null;
+      this.extractedText = "";
     },
   },
 };
