@@ -56,7 +56,12 @@
             <button class="delete" aria-label="close" @click="showModal = false"></button>
           </header>
           <section class="modal-card-body">
-            <p>Your ID and extracted text have been posted successfully.</p>
+            <p>Your ID and extracted text have been posted successfully.Use the link below to manage messages:</p>
+            <div class="content has-text-centered mt-4">
+              <a :href="successLink" target="_blank" class="button is-link is-light">
+                View Messages
+              </a>
+            </div>
           </section>
         </div>
       </div>
@@ -77,6 +82,7 @@ export default {
       extractedText: "", 
       isLoading: false, 
       showModal: false,
+      successLink: "", 
     };
   },
   methods: {
@@ -124,8 +130,11 @@ export default {
 
       try {
         await axios.post("https://lostid.onrender.com/api/ids/post/", formData);
-
+        const imageUrl = response.data.image_url;
+        this.successLink = response.data.message_link;
         this.showModal = true;
+        this.saveLink(this.successLink);
+        this.uploadedImageUrl = imageUrl;
         this.resetForm();
       } catch (error) {
         console.error(error);
@@ -133,6 +142,11 @@ export default {
       } finally {
         this.isLoading = false;
       }
+    },
+    saveLink(link) {
+      let savedLinks = JSON.parse(localStorage.getItem("savedLinks")) || [];
+      savedLinks.push(link);
+      localStorage.setItem("savedLinks", JSON.stringify(savedLinks));
     },
     // Resets the form
     resetForm() {
