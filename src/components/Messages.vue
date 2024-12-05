@@ -60,7 +60,7 @@ export default {
   methods: {
     async fetchMessages() {
       try {
-        const response = await axios.get(`https://lostid-4c72.vercel.app/api/ids/${this.id}/messages/`);
+        const response = await axios.get(`https://lostid.onrender.com/api/ids/${this.id}/messages/`);
         this.messages = response.data;
       } catch (error) {
         alert('Failed to load messages.');
