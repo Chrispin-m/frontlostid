@@ -2,13 +2,7 @@
   <section class="section">
     <div class="container">
       <!-- Upload Form Section -->
-      <motion-div
-        class="box shadow-lg p-5"
-        initial="hidden"
-        animate="visible"
-        variants="{ hidden: { opacity: 0, scale: 0.9 }, visible: { opacity: 1, scale: 1 } }"
-        transition="{ duration: 0.8 }"
-      >
+      <div class="box shadow-lg p-5">
         <form @submit.prevent="submitID">
           <!-- File Upload Field -->
           <div class="field">
@@ -39,24 +33,24 @@
               class="button is-large is-primary is-rounded"
               :class="{ 'is-loading': isLoading }"
               type="submit"
-              :disabled="isLoading" 
+              :disabled="isLoading"
             >
               <i class="fas fa-paper-plane mr-2"></i> Submit ID
             </button>
           </div>
         </form>
-      </motion-div>
+      </div>
 
       <!-- Success Modal -->
       <div class="modal" :class="{ 'is-active': showModal }">
-        <div class="modal-background" @click="showModal = false"></div>
+        <div class="modal-background" @click="closeModal"></div>
         <div class="modal-card">
           <header class="modal-card-head">
             <p class="modal-card-title">Submission Successful!</p>
-            <button class="delete" aria-label="close" @click="showModal = false"></button>
+            <button class="delete" aria-label="close" @click="closeModal"></button>
           </header>
           <section class="modal-card-body">
-            <p>Your ID and extracted text have been posted successfully.Use the link below to manage messages:</p>
+            <p>Your ID and extracted text have been posted successfully. Use the link below to manage messages:</p>
             <div class="content has-text-centered mt-4">
               <a :href="successLink" target="_blank" class="button is-link is-light">
                 View Messages
@@ -76,13 +70,13 @@ import Tesseract from "tesseract.js";
 export default {
   data() {
     return {
-      image: null, 
-      fileName: "", 
-      imagePreview: null, 
-      extractedText: "", 
-      isLoading: false, 
+      image: null,
+      fileName: "",
+      imagePreview: null,
+      extractedText: "",
+      isLoading: false,
       showModal: false,
-      successLink: "", 
+      successLink: "",
     };
   },
   methods: {
@@ -129,12 +123,13 @@ export default {
       formData.append("extracted_text", this.extractedText);
 
       try {
-        await axios.post("https://lostid.onrender.com/api/ids/post/", formData);
-        const imageUrl = response.data.image_url;
+        const response = await axios.post(
+          "https://lostid.onrender.com/api/ids/post/",
+          formData
+        );
         this.successLink = response.data.message_link;
         this.showModal = true;
         this.saveLink(this.successLink);
-        this.uploadedImageUrl = imageUrl;
         this.resetForm();
       } catch (error) {
         console.error(error);
@@ -143,10 +138,15 @@ export default {
         this.isLoading = false;
       }
     },
+    // Saves link to local storage
     saveLink(link) {
-      let savedLinks = JSON.parse(localStorage.getItem("savedLinks")) || [];
+      const savedLinks = JSON.parse(localStorage.getItem("savedLinks")) || [];
       savedLinks.push(link);
       localStorage.setItem("savedLinks", JSON.stringify(savedLinks));
+    },
+    // Closes the modal
+    closeModal() {
+      this.showModal = false;
     },
     // Resets the form
     resetForm() {
